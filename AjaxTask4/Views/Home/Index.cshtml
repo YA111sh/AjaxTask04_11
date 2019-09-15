@@ -1,0 +1,51 @@
+﻿@model AjaxTask4.Models.CountryStateViewModel
+
+<br />
+<br />
+<div class="container">
+    <div class="form-group">
+        @if (ViewBag.CountryList != null)
+        {
+            @Html.DropDownListFor(model => model.CountryId, ViewBag.CountryList as SelectList, "--Select Country--", new { @class = "form-control" })
+        }
+    </div>
+    <div class="form-group">
+
+
+        @Html.DropDownListFor(model => model.StateId, new SelectList(" "), "--Select State--", new { @class = "form-control" })
+
+    </div>
+
+    <div class="form-group">
+
+
+        @Html.DropDownListFor(model => model.CityId, new SelectList(" "), "--Select City--", new { @class = "form-control" })
+
+    </div>
+
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#CountryId").change(function () {
+            $.get("/Home/GetStateList",{ CountryId: $("#CountryId").val() }, function (data) {
+                $("#StateId").empty();
+                $.each(data,function(index, row){
+                    $("#StateId").append("<option value='" + row.StateId + "'>" + row.StateName + "</option>")
+                });
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#StateId").change(function () {
+            $.get("/Home/GetCityList", { StateId: $("#StateId").val() }, function (data) {
+                $("#CityId").empty();
+                $.each(data, function (index, row) {
+                    $("#CityId").append("<option value='" + row.CityId + "'>" + row.CityName + "</option>")
+                });
+            });
+        });
+    });
+</script>
